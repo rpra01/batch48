@@ -1,0 +1,27 @@
+1. Voting pod delete :
+>kubectl delete pod vote-94849dc97-97fwl
+a. pod shows terminating and new pod with new id vote-94849dc97-dsj9c shows running state. 
+b. pod terminates very fast and gets removed from display of "kubectl get all" output
+c. No change in vote/result UIs. Old vote result is retained. 
+d. New vote post pod delete gets registered in Vote UI and  gets displayed in result UI.
+e. new pod age is less that other pods started together in the begining.
+>kubectl describe po vote-94849dc97-dsj9c
+f. Container image "dockersamples/examplevotingapp_vote:before" already present on machine
+
+
+2 Worker pod delete :
+>kubectl delete pod worker-dd46d7584-4tqv9
+a. pod shows terminating and new pod with new id shows running state. 
+b. pod terminates very fast and gets removed from display of "kubectl get all" output
+c. No change in vote/result UIs. Old vote result is retained. 
+>kubectl describe po worker-dd46d7584-4tqv9
+f. worker image is not found in machine, its pulled from docker hub for initiating new pod
+Pulling image "dockersamples/examplevotingapp_worker"
+Successfully pulled image "dockersamples/examplevotingapp_worker"
+pulled worker image. 
+
+3 DB pod delete :
+a. db pod takes a long time to terminate, almost 36 secs to terminate. New pod shows running all this while.
+b. Result UI retains voting result for some time while old pod terminating. Only once the old pod has terminated completely the voting result gets lost in results UI. 
+c. image present on machine and not pulled from docker hub for new pod creation
+d. result and worker containers show one restarts in "kubectl get all" output. These containers are restarted due to DB pod delete operation.
